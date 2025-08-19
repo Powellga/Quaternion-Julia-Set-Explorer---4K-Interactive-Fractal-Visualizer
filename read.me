@@ -1,0 +1,150 @@
+# Quaternion Julia Set Explorer
+
+## Overview
+
+A WebGL 2.0-based real-time renderer for quaternion Julia sets. The application visualizes 4D fractals through 3D cross-sections using ray marching with distance estimation. Runs entirely in the browser as a single HTML file.
+
+## Technical Specifications
+
+**Rendering:**
+- WebGL 2.0 with GLSL ES 3.00 shaders
+- Ray marching with quaternion distance estimation
+- Default resolution: 3840x2160 (4K)
+- Automatic resolution scaling based on performance
+- 60 FPS target with dynamic quality adjustment
+
+**Mathematics:**
+- Iterates Z = Z² + K in quaternion space
+- K components range from -2 to 2
+- Variable W-slice for 3D cross-sections of 4D space
+- Configurable iteration count (5-200)
+
+## Features
+
+### Animation System
+- Sequential parameter cycling through X, Y, Z, W, then all components
+- Each parameter oscillates from -2 to 2 and back over 4 seconds
+- Play/pause functionality with automatic control locking during playback
+- Visual status indicator showing current animation phase
+
+### Color Palettes
+- **Cosmic:** RGB gradients from deep blue through cyan to magenta
+- **Fire:** Red to orange to yellow progression
+- **Ocean:** Dark blue through teal to light aqua
+- **Alien:** Green through bright green to purple
+- **Custom:** Three user-definable colors via color pickers
+
+### Lighting System
+- Directional lighting with configurable light direction
+- Soft shadows using sphere tracing
+- Ambient occlusion (5-sample approximation)
+- Emissive glow based on iteration depth
+- All effects individually toggleable
+
+### Camera Controls
+- **Arrow Keys:** Pitch and yaw rotation
+- **W/S:** Forward/backward movement
+- **A/D:** Strafe left/right
+- **Q/E:** Vertical movement
+- **Shift:** 3x movement speed multiplier
+
+### Performance Features
+- Real-time FPS counter with resolution display
+- Automatic quality scaling when FPS drops below 20
+- Resolution increases when FPS exceeds 50
+- Maintains aspect ratio during scaling
+
+## Parameters
+
+**Julia Constant (K):**
+- X component: -2.0 to 2.0
+- Y component: -2.0 to 2.0
+- Z component: -2.0 to 2.0
+- W component: -2.0 to 2.0
+
+**Rendering Settings:**
+- Iterations: 5 to 200 (default: 100)
+- W-Slice: -2.0 to 2.0 (default: 0.0)
+
+## Implementation Details
+
+### Shader Architecture
+The fragment shader implements:
+1. Quaternion multiplication using Hamilton's rules
+2. Distance estimation via derivative tracking
+3. Normal calculation through gradient approximation
+4. Multiple lighting passes with shadow mapping
+
+### Quaternion Mathematics
+```
+Z(n+1) = Z(n)² + K
+where Z and K are quaternions (x,y,z,w)
+```
+
+Distance estimation uses the running derivative:
+```
+DE = 0.5 * |Z| * log(|Z|) / |dZ|
+```
+
+### Performance Optimizations
+- Single-pass rendering without post-processing
+- Adaptive ray marching step sizes
+- Early termination for distant rays
+- Simplified lighting calculations based on quality settings
+
+## File Structure
+
+Single HTML file containing:
+- CSS styles (inline)
+- WebGL 2.0 initialization
+- GLSL vertex and fragment shaders
+- JavaScript controls and animation logic
+- UI event handlers
+
+## Browser Requirements
+
+- WebGL 2.0 support (Chrome 56+, Firefox 51+, Edge 79+)
+- Hardware GPU acceleration recommended
+- Minimum 4GB RAM for 4K rendering
+- RTX 3080 or equivalent for optimal 4K performance
+
+## Deployment
+
+1. Save as `index.html`
+2. Host on any static web server
+3. For GitHub Pages: Push to repository and enable Pages in settings
+4. Access via `https://[username].github.io/[repository]/`
+
+## Known Limitations
+
+- Maximum 200 ray marching steps per pixel
+- W-slice limited to ±2.0 range
+- No multi-sample anti-aliasing (performance consideration)
+- Color palettes limited to 3-color gradients
+- No export of fractal parameters (screenshot only)
+
+## Controls Reference
+
+| Input | Action |
+|-------|--------|
+| ↑/↓ | Camera pitch |
+| ←/→ | Camera yaw |
+| W/S | Move forward/back |
+| A/D | Strafe left/right |
+| Q/E | Move up/down |
+| Shift | Speed boost |
+| Play Button | Start/stop animation |
+| Random Julia | Generate random parameters |
+| Reset Camera | Return to origin |
+| Screenshot | Save PNG image |
+
+## Performance Targets
+
+- 4K (3840x2160): 30+ FPS on RTX 3080
+- 1440p: 60 FPS on GTX 1070
+- 1080p: 60 FPS on integrated graphics
+- Auto-scaling maintains 20+ FPS minimum
+
+Gregg Powell
+8/18/2025
+g.a.powell@protonmail.com
